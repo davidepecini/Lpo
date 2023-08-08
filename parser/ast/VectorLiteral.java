@@ -7,8 +7,8 @@ public class VectorLiteral implements Exp {
 	private final Exp exp2;
 
 	public VectorLiteral(Exp exp1, Exp exp2) {
-		this.exp1 = exp1;
-		this.exp2 = exp2;
+		this.exp1 = requireNonNull(exp1);
+		this.exp2 = requireNonNull(exp2);
 	}
 
 	public Exp getexp1() {

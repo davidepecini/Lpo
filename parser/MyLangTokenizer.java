@@ -63,7 +63,6 @@ public class MyLangTokenizer implements Tokenizer {
 		keywords.put("in", IN);
 		symbols.put("[", OPEN_VECT);
 		symbols.put("]", CLOSE_VECT);
-		symbols.put(";", SEPARATOR);
 	}
 
 	static {

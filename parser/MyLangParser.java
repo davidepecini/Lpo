@@ -1,14 +1,11 @@
 package progettoFinale.parser;
 
-import static java.lang.System.*;
 import static java.util.Objects.*;
 import static progettoFinale.parser.TokenType.*;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+
+import org.xml.sax.Parser;
 
 import progettoFinale.parser.ast.Add;
 import progettoFinale.parser.ast.And;
@@ -343,41 +340,9 @@ public class MyLangParser implements Parser {
 	private Exp parseVectorLit() throws ParserException {
 		consume(OPEN_VECT);
 		Exp exp1 = parseExp();
-		consume(SEPARATOR);
+		consume(STMT_SEP);
 		Exp exp2 = parseExp();
 		consume(CLOSE_VECT);
 		return new VectorLiteral(exp1, exp2);
 	}
-
-	// parsing per ';'. nome provvisorio
-	private Exp parseSep() throws ParserException {
-		var exp = parseAnd();
-		while (tokenizer.tokenType() == SEPARATOR) {
-			nextToken();
-			exp = new PairLit(exp, parseAnd());
-		}
-		return exp;
-	}
-
-	// opens the input stream, standard input if -i option is null
-	private static BufferedReader tryOpenInput(String inputPath) throws FileNotFoundException {
-		return new BufferedReader(inputPath == null ? new InputStreamReader(System.in) : new FileReader(inputPath));
-	}
-
-	public static void main(String[] args) {
-		try (var lang_reader = tryOpenInput(args.length > 0 ? args[0] : null);
-				var lang_tokenizer = new MyLangTokenizer(lang_reader);
-				var lang_parser = new MyLangParser(lang_tokenizer);) {
-			var prog = lang_parser.parseProg();
-			System.out.println(prog);
-		} catch (IOException e) {
-			err.println("I/O error: " + e.getMessage());
-		} catch (ParserException e) {
-			err.println("Syntax error: " + e.getMessage());
-		} catch (Throwable e) {
-			err.println("Unexpected error.");
-			e.printStackTrace();
-		}
-	}
-
 }

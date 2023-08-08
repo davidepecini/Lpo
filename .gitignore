@@ -1,0 +1,22 @@
+*~
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.bbl
+*.class
+*.gz
+*.png
+*.jpg
+
+# IntelliJ Files
+*.iml
+
+# Compiled Files
+/out
+/.idea
+
+.DS_Store
