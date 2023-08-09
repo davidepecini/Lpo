@@ -156,9 +156,12 @@ public class Typecheck implements Visitor<Type> {
 
 	// aggiunte
 	@Override
-	public Type visitForeachStmt(Variable var, Exp exp, Block foreachBlock) {
-		BOOL.checkEqual(exp.accept(this));
+	public Type visitForeachStmt(Variable ident, Exp exp, Block foreachBlock) {
+		exp.accept(this).checkIsRangeType();
+		env.enterScope();
+		env.dec(ident, INT);
 		foreachBlock.accept(this);
+		env.exitScope();
 		return null;
 	}
 

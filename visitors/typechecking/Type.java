@@ -19,4 +19,9 @@ public interface Type {
 	default Type getSndPairType() throws TypecheckerException {
 		return checkIsPairType().getSndType();
 	}
+
+	default void checkIsRangeType() throws TypecheckerException {
+		if (!(this instanceof RangeType))
+			throw new TypecheckerException(toString(), RangeType.TYPE_NAME);
+	}
 }
