@@ -171,4 +171,13 @@ public class Typecheck implements Visitor<Type> {
 		return VECTOR;
 	}
 
+	@Override
+	Type visitGenericAdd(Exp exp1, Exp exp2) {
+		// toDo
+	}
+
+	@Override
+	Type visitGenericMul(Exp exp1, Exp exp2) {
+		// toDo
+	}
 }

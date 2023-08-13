@@ -52,4 +52,7 @@ public interface Visitor<T> {
 
 	T visitVectorLiteral(Exp exp1, Exp exp2);
 
+	T visitGenericAdd(Exp exp1, Exp exp2);
+
+	T visitGenericMul(Exp exp1, Exp exp2);
 }
