@@ -346,4 +346,8 @@ public class MyLangParser implements Parser {
 		consume(CLOSE_VECT);
 		return new VectorLiteral(exp1, exp2);
 	}
+
+	// toDo
+	// parseGenericAdd
+	// parseGenericMul
 }

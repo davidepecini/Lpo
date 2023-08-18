@@ -172,12 +172,33 @@ public class Typecheck implements Visitor<Type> {
 	}
 
 	@Override
-	Type visitGenericAdd(Exp exp1, Exp exp2) {
-		// toDo
+	public Type visitGenericAdd(Exp exp1, Exp exp2) {
+		Type type1 = exp1.accept(this);
+		Type type2 = exp2.accept(this);
+
+		if (type1.equals(INT) && type2.equals(INT)) {
+			return INT;
+		} else if (type1.equals(VECTOR) && type2.equals(VECTOR)) {
+			if (exp1.size() != exp2.size()) {
+				throw new TypecheckerException("Vectors with different dimensions");
+			}
+			return VECTOR;
+		} else {
+			throw new TypecheckerException("Operands must be integers or vectors");
+		}
 	}
 
 	@Override
-	Type visitGenericMul(Exp exp1, Exp exp2) {
-		// toDo
+	public Type visitGenericMul(Exp exp1, Exp exp2) {
+		Type type1 = exp1.accept(this);
+		Type type2 = exp2.accept(this);
+
+		if (type1.equals(INT) && type2.equals(INT)) {
+			return INT;
+		} else if (type1.equals(VECTOR) && type2.equals(INT) || type1.equals(INT) && type2.equals(VECTOR)) {
+			return VECTOR;
+		} else {
+			throw new TypecheckerException("Operands must be integers or vectors");
+		}
 	}
 }
