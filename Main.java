@@ -1,14 +1,5 @@
 package progettoFinale;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-
 import progettoFinale.parser.MyLangParser;
 import progettoFinale.parser.MyLangTokenizer;
 import progettoFinale.parser.ParserException;
@@ -17,6 +8,10 @@ import progettoFinale.visitors.execution.Execute;
 import progettoFinale.visitors.execution.InterpreterException;
 import progettoFinale.visitors.typechecking.Typecheck;
 import progettoFinale.visitors.typechecking.TypecheckerException;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
@@ -75,10 +70,15 @@ public class Main {
 
 	public static void main(String[] args) {
 		processArgs(args);
-		try (var rd = tryOpenInput(options.get(INPUT_OPT)[0]);
-				var tokenizer = new MyLangTokenizer(rd);
-				var parser = new MyLangParser(tokenizer);
-				var pw = tryOpenOutput(options.get(OUTPUT_OPT)[0]);) {
+		BufferedReader rd = null;
+		PrintWriter pw = null;
+
+		try {
+			rd = tryOpenInput(options.get(INPUT_OPT)[0]);
+			var tokenizer = new MyLangTokenizer(rd);
+			var parser = new MyLangParser(tokenizer);
+			pw = tryOpenOutput(options.get(OUTPUT_OPT)[0]);
+
 			Prog prog = parser.parseProg();
 			if (options.get(NO_TYPE_CHECK) == null)
 				prog.accept(new Typecheck());
@@ -94,7 +94,17 @@ public class Main {
 		} catch (Throwable e) {
 			e.printStackTrace();
 			error("Unexpected error.");
+		} finally {
+			try {
+				if (rd != null)
+					rd.close();
+				if (pw != null)
+					pw.close();
+			} catch (IOException e) {
+				error("Error closing resources: " + e.getMessage());
+			}
 		}
 	}
+
 
 }

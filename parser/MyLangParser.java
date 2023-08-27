@@ -1,39 +1,11 @@
 package progettoFinale.parser;
 
-import static java.util.Objects.*;
-import static progettoFinale.parser.TokenType.*;
+import progettoFinale.parser.ast.*;
 
 import java.io.IOException;
 
-import org.xml.sax.Parser;
-
-import progettoFinale.parser.ParserException;
-import progettoFinale.parser.ast.Add;
-import progettoFinale.parser.ast.And;
-import progettoFinale.parser.ast.AssignStmt;
-import progettoFinale.parser.ast.Block;
-import progettoFinale.parser.ast.BoolLiteral;
-import progettoFinale.parser.ast.EmptyStmtSeq;
-import progettoFinale.parser.ast.Eq;
-import progettoFinale.parser.ast.Exp;
-import progettoFinale.parser.ast.ForeachStmt;
-import progettoFinale.parser.ast.Fst;
-import progettoFinale.parser.ast.IfStmt;
-import progettoFinale.parser.ast.IntLiteral;
-import progettoFinale.parser.ast.Mul;
-import progettoFinale.parser.ast.MyLangProg;
-import progettoFinale.parser.ast.NonEmptyStmtSeq;
-import progettoFinale.parser.ast.Not;
-import progettoFinale.parser.ast.PairLit;
-import progettoFinale.parser.ast.PrintStmt;
-import progettoFinale.parser.ast.Prog;
-import progettoFinale.parser.ast.Sign;
-import progettoFinale.parser.ast.Snd;
-import progettoFinale.parser.ast.Stmt;
-import progettoFinale.parser.ast.StmtSeq;
-import progettoFinale.parser.ast.VarStmt;
-import progettoFinale.parser.ast.Variable;
-import progettoFinale.parser.ast.VectorLiteral;
+import static java.util.Objects.requireNonNull;
+import static progettoFinale.parser.TokenType.*;
 
 /*
 Prog ::= StmtSeq EOF

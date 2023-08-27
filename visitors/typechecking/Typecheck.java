@@ -1,15 +1,11 @@
 package progettoFinale.visitors.typechecking;
 
-import static progettoFinale.visitors.typechecking.AtomicType.*;
-
 import progettoFinale.environments.EnvironmentException;
 import progettoFinale.environments.GenEnvironment;
-import progettoFinale.parser.ast.Block;
-import progettoFinale.parser.ast.Exp;
-import progettoFinale.parser.ast.Stmt;
-import progettoFinale.parser.ast.StmtSeq;
-import progettoFinale.parser.ast.Variable;
+import progettoFinale.parser.ast.*;
 import progettoFinale.visitors.Visitor;
+
+import static progettoFinale.visitors.typechecking.AtomicType.*;
 
 public class Typecheck implements Visitor<Type> {
 
@@ -179,9 +175,9 @@ public class Typecheck implements Visitor<Type> {
 		if (type1.equals(INT) && type2.equals(INT)) {
 			return INT;
 		} else if (type1.equals(VECTOR) && type2.equals(VECTOR)) {
-			if (exp1.size() != exp2.size()) {
-				throw new TypecheckerException("Vectors with different dimensions");
-			}
+		//	if (exp1.size() != exp2.size()) {
+		//		throw new TypecheckerException("Vectors with different dimensions");
+		//		}
 			return VECTOR;
 		} else {
 			throw new TypecheckerException("Operands must be integers or vectors");
