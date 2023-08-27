@@ -2,6 +2,8 @@ package progettoFinale.parser.ast;
 
 import progettoFinale.visitors.Visitor;
 
+import static java.util.Objects.requireNonNull;
+
 public class VectorLiteral implements Exp {
 	private final Exp exp1;
 	private final Exp exp2;

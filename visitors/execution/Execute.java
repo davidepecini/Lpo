@@ -1,17 +1,13 @@
 package progettoFinale.visitors.execution;
 
-import static java.util.Objects.*;
+import progettoFinale.environments.EnvironmentException;
+import progettoFinale.environments.GenEnvironment;
+import progettoFinale.parser.ast.*;
+import progettoFinale.visitors.Visitor;
 
 import java.io.PrintWriter;
 
-import progettoFinale.environments.EnvironmentException;
-import progettoFinale.environments.GenEnvironment;
-import progettoFinale.parser.ast.Block;
-import progettoFinale.parser.ast.Exp;
-import progettoFinale.parser.ast.Stmt;
-import progettoFinale.parser.ast.StmtSeq;
-import progettoFinale.parser.ast.Variable;
-import progettoFinale.visitors.Visitor;
+import static java.util.Objects.requireNonNull;
 
 public class Execute implements Visitor<Value> {
 
@@ -170,6 +166,16 @@ public class Execute implements Visitor<Value> {
 	@Override
 	public VectorValue visitVectorLiteral(Exp exp1, Exp exp2) {
 		return new VectorValue(exp1.accept(this).toInt(), exp2.accept(this).toInt());
+	}
+
+	@Override
+	public Value visitGenericAdd(Exp exp1, Exp exp2) {
+		return null;
+	}
+
+	@Override
+	public Value visitGenericMul(Exp exp1, Exp exp2) {
+		return null;
 	}
 
 }

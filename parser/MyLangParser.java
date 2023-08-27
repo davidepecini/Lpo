@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.xml.sax.Parser;
 
-import progettoFinale.ParserException;
+import progettoFinale.parser.ParserException;
 import progettoFinale.parser.ast.Add;
 import progettoFinale.parser.ast.And;
 import progettoFinale.parser.ast.AssignStmt;
