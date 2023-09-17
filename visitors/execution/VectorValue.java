@@ -2,52 +2,84 @@ package progettoFinale.visitors.execution;
 
 import static java.util.Objects.*;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.Arrays;
 
-public class VectorValue implements Value, Iterator<Integer>, Iterable<Integer> {
+public class VectorValue implements Value {
 
-	private int start;
-	private int end;
+	private final Value index;
+	private final Value dim;
+	private final int[] elements;
 
-	public VectorValue(int start, int end) {
-		this.start = requireNonNull(start);
-		this.end = requireNonNull(end);
+	private String EXPETED_ERR = "Expeted IntValue";
+	private String DIMENSION_ERR = "Vectors should have the same dimension";
+
+	public VectorValue(Value index, Value dim) {
+		try {
+			this.index = requireNonNull(checkValue(index));
+			this.dim = requireNonNull(checkValue(dim));
+			this.elements = new int[dim.toInt()];
+
+			for (int i = 0; i < dimension.toInt(); i++)
+				elements[i] = 0;
+			elements[idex.toInt()] = 1;
+
+		} catch (Exception e) {
+			throw new InterpreterException(e);
+		}
 	}
 
-	public VectorValue(VectorValue vect) {
-		this.start = requireNonNull(vect.start);
-		this.end = requireNonNull(vect.end);
+	public VectorValue(int[] elements) {
+		this.elements = requireNonNull(elements);
+		this.index = new IntValue(0);
+		this.dim = IntValue(elements.length);
 	}
 
-	public IntValue getStart() {
-		return new IntValue(start);
+	public Value getDim() {
+		return dim;
 	}
 
-	public IntValue getEnd() {
-		return new IntValue(end);
+	public Value getElements(int e) {
+		return new intValue(elements[e]);
 	}
 
-	public boolean hasNext() {
-		return start < end;
+	public boolean checkDimension(VectorValue v) {
+		return this.dim.toInt() == v.dim.toInt();
 	}
 
-	@Override
-	public Integer next() {
-		if (!hasNext())
-			throw new NoSuchElementException();
-		int res;
-		res = start;
-		if (start < end)
-			start++;
-		else
-			start--;
-		return res;
+	public Value checkValue(Value index) {
+		if (index instanceof IntValue)
+			return index;
+		throw new InterpreterException(EXPETED_ERR);
 	}
 
-	@Override
-	public Iterator<Integer> iterator() {
-		return this;
+	public IntValue mul(VectorValue v) {
+		if (!checkDimension(v))
+			throw new InterpreterException(DIMENSION_ERR);
+
+		var val = 0;
+		int size = getDimension().toInt();
+
+		for (var i = 0; i < size; ++i)
+			val += this.getElement(i).toInt() * v.getElement(i).toInt();
+
+		return new IntValue(val);
+	}
+
+	public VectorValue sum(VectorValue v) {
+		if (!checkDimension(v))
+			throw new InterpreterException(DIMENSION_ERR);
+
+		int size = getDimension().toInt();
+		int[] vec = new int[size];
+
+		for (var i = 0; i < size; ++i)
+			vec[i] = this.getElement(i).toInt() + v.getElement(i).toInt();
+
+		return new VectorValue(newVec);
+	}
+
+	public int hashCode() {
+		return hash(Arrays.hashCode(elements));
 	}
 
 	@Override
@@ -55,37 +87,25 @@ public class VectorValue implements Value, Iterator<Integer>, Iterable<Integer> 
 		return this;
 	}
 
-	// @Override public String toString() { return "[" + start + ";" + end + "]";}
+	@Override
+	public final boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj instanceof VectorValue vt)
+			return Arrays.equals(elements, vt.elements);
+		return false;
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
-		boolean first = true;
-		for (int i : this) {
-			if (!first) {
+		for (int i = 0; i < elements.length; i++) {
+			sb.append(elements[i]);
+			if (i != elements.length - 1)
 				sb.append(";");
-			}
-			sb.append(i);
-			first = false;
 		}
 		sb.append("]");
 		return sb.toString();
 	}
-
-	@Override
-	public int hashCode() {
-		return hash(start, end);
-	}
-
-	@Override
-	public final boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof VectorValue))
-			return false;
-		var op = (VectorValue) obj;
-		return (!this.hasNext() && !op.hasNext()) || (start == op.start && end == op.end);
-	}
-
 }

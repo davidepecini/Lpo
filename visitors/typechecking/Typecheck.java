@@ -1,11 +1,11 @@
 package progettoFinale.visitors.typechecking;
 
+import static progettoFinale.visitors.typechecking.AtomicType.*;
+
 import progettoFinale.environments.EnvironmentException;
 import progettoFinale.environments.GenEnvironment;
-import progettoFinale.parser.ast.*;
+import progettoFinale.parser.ast.Exp;
 import progettoFinale.visitors.Visitor;
-
-import static progettoFinale.visitors.typechecking.AtomicType.*;
 
 public class Typecheck implements Visitor<Type> {
 
@@ -85,19 +85,7 @@ public class Typecheck implements Visitor<Type> {
 	// static semantics of expressions; a type is returned by the visitor
 
 	@Override
-	public AtomicType visitAdd(Exp left, Exp right) {
-		checkBinOp(left, right, INT);
-		return INT;
-	}
-
-	@Override
 	public AtomicType visitIntLiteral(int value) {
-		return INT;
-	}
-
-	@Override
-	public AtomicType visitMul(Exp left, Exp right) {
-		checkBinOp(left, right, INT);
 		return INT;
 	}
 
@@ -153,7 +141,7 @@ public class Typecheck implements Visitor<Type> {
 	// aggiunte
 	@Override
 	public Type visitForeachStmt(Variable ident, Exp exp, Block foreachBlock) {
-		exp.accept(this).checkIsRangeType();
+		VECT.checkEqual(exp.accept(this));
 		env.enterScope();
 		env.dec(ident, INT);
 		foreachBlock.accept(this);
@@ -164,37 +152,25 @@ public class Typecheck implements Visitor<Type> {
 	@Override
 	public Type visitVectorLiteral(Exp exp1, Exp exp2) {
 		checkBinOp(exp1, exp2, INT);
-		return VECTOR;
+		return VECT;
+	}
+
+	// modificate
+	@Override
+	public AtomicType visitAdd(Exp left, Exp right) {
+		var exp = checkIntOrVect(left);
+		exp.checkEqual(checkIntOrVect(right));
+		return exp;
 	}
 
 	@Override
-	public Type visitGenericAdd(Exp exp1, Exp exp2) {
-		Type type1 = exp1.accept(this);
-		Type type2 = exp2.accept(this);
+	public AtomicType visitMul(Exp left, Exp right) {
+		var exp1 = checkIntOrVect(left);
+		var exp2 = checkIntOrVect(right);
 
-		if (type1.equals(INT) && type2.equals(INT)) {
-			return INT;
-		} else if (type1.equals(VECTOR) && type2.equals(VECTOR)) {
-		//	if (exp1.size() != exp2.size()) {
-		//		throw new TypecheckerException("Vectors with different dimensions");
-		//		}
-			return VECTOR;
-		} else {
-			throw new TypecheckerException("Operands must be integers or vectors");
-		}
+		assert (INT.equals(exp1) || VECT.equals(exp1));
+		assert (INT.equals(exp2) || VECT.equals(exp2));
+		return exp1.equals(exp2) ? INT : VECT;
 	}
 
-	@Override
-	public Type visitGenericMul(Exp exp1, Exp exp2) {
-		Type type1 = exp1.accept(this);
-		Type type2 = exp2.accept(this);
-
-		if (type1.equals(INT) && type2.equals(INT)) {
-			return INT;
-		} else if (type1.equals(VECTOR) && type2.equals(INT) || type1.equals(INT) && type2.equals(VECTOR)) {
-			return VECTOR;
-		} else {
-			throw new TypecheckerException("Operands must be integers or vectors");
-		}
-	}
 }

@@ -15,21 +15,13 @@ public class ForeachStmt implements Stmt {
 		this.foreachBlock = requireNonNull(foreachBlock);
 	}
 
-	public Variable getIdent() {
-		return ident;
-	}
-
-	public Exp getExp() {
-		return exp;
-	}
-
 	public Block getForeachBlock() {
 		return foreachBlock;
 	}
 
 	@Override
 	public String toString() {
-		return "foreach " + ident + " in " + exp + " " + foreachBlock;
+		return getClass().getSimpleName() + "() " + ident + " in " + exp + " " + foreachBlock + ")";
 	}
 
 	@Override

@@ -1,13 +1,13 @@
 package progettoFinale.visitors.execution;
 
-import progettoFinale.environments.EnvironmentException;
-import progettoFinale.environments.GenEnvironment;
-import progettoFinale.parser.ast.*;
-import progettoFinale.visitors.Visitor;
+import static java.util.Objects.*;
 
 import java.io.PrintWriter;
 
-import static java.util.Objects.requireNonNull;
+import progettoFinale.environments.EnvironmentException;
+import progettoFinale.environments.GenEnvironment;
+import progettoFinale.parser.ast.Exp;
+import progettoFinale.visitors.Visitor;
 
 public class Execute implements Visitor<Value> {
 
@@ -153,29 +153,21 @@ public class Execute implements Visitor<Value> {
 	// aggiunte
 	@Override
 	public Value visitForeachStmt(Variable ident, Exp exp, Block foreachBlock) {
-		VectorValue vectorValue = exp.accept(this).toVect();
-		for (int i : vectorValue) {
-			env.enterScope();
-			env.update(ident, new IntValue(i));
+		var vectorValue = exp.accept(this).toVect();
+		evn.enterScope();
+		env.dec(IDENT, new IntValue(-1));
+
+		for (var i = 0; i < vector.getDimension().toInt(); i++) {
+			env.update(ident, vector.getElement(i));
 			foreachBlock.accept(this);
-			env.exitScope();
 		}
+		env.exitScope();
 		return null;
 	}
 
 	@Override
 	public VectorValue visitVectorLiteral(Exp exp1, Exp exp2) {
-		return new VectorValue(exp1.accept(this).toInt(), exp2.accept(this).toInt());
-	}
-
-	@Override
-	public Value visitGenericAdd(Exp exp1, Exp exp2) {
-		return null;
-	}
-
-	@Override
-	public Value visitGenericMul(Exp exp1, Exp exp2) {
-		return null;
+		return new VectorValue(exp1.accept(this), exp2.accept(this));
 	}
 
 }

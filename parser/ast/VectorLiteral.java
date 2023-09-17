@@ -1,8 +1,8 @@
 package progettoFinale.parser.ast;
 
-import progettoFinale.visitors.Visitor;
+import static java.util.Objects.*;
 
-import static java.util.Objects.requireNonNull;
+import progettoFinale.visitors.Visitor;
 
 public class VectorLiteral implements Exp {
 	private final Exp exp1;
@@ -13,22 +13,15 @@ public class VectorLiteral implements Exp {
 		this.exp2 = requireNonNull(exp2);
 	}
 
-	public Exp getexp1() {
-		return exp1;
-	}
-
-	public Exp getexp2() {
-		return exp2;
-	}
-
 	@Override
 	public String toString() {
-		return "[" + exp1 + " ; " + exp2 + "]";
+		return getClass().getSimpleName + "[" + exp1 + " ; " + exp2 + "]";
 	}
 
 	@Override
 	public <T> T accept(Visitor<T> visitor) {
 		return visitor.visitVectorLiteral(exp1, exp2);
 	}
+
 }
 // aggiunta

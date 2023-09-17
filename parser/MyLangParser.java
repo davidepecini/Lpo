@@ -1,11 +1,13 @@
 package progettoFinale.parser;
 
-import progettoFinale.parser.ast.*;
+import static java.util.Objects.*;
+import static progettoFinale.parser.TokenType.*;
 
 import java.io.IOException;
 
-import static java.util.Objects.requireNonNull;
-import static progettoFinale.parser.TokenType.*;
+import progettoFinale.parser.ast.Exp;
+import progettoFinale.parser.ast.Variable;
+import progettoFinale.parser.ast.VectorLiteral;
 
 /*
 Prog ::= StmtSeq EOF
@@ -140,30 +142,6 @@ public class MyLangParser implements Parser {
 		return new IfStmt(exp, thenBlock, parseBlock());
 	}
 
-	// Aggiunto: parses the 'foreach' statement
-	// old ver
-	/*
-	 * private ForeachStmt parseForeachStmt() throws ParserException {
-	 * consume(FOREACH);
-	 * final Variable var = parseVariable();
-	 * consume(IN);
-	 * final Exp exp = parseRoundPar();
-	 * final Block foreachBlock = parseBlock();
-	 * return new ForeachStmt(var, exp, foreachBlock);
-	 * }
-	 */
-
-	// new :
-	// Stmt::= 'foreach' IDENT 'in' Exp Block
-	private ForeachStmt parseForeachStmt() throws ParserException {
-		consume(FOREACH);
-		final var ident = parseVariable();
-		consume(IN);
-		final var exp = parseExp();
-		final var block = parseBlock();
-		return new ForeachStmt(ident, exp, block);
-	}
-
 	// parses a block of statements Block ::= '{' StmtSeq '}'
 	private Block parseBlock() throws ParserException {
 		consume(OPEN_BLOCK);
@@ -239,7 +217,6 @@ public class MyLangParser implements Parser {
 			case NOT -> parseNot();
 			case FST -> parseFst();
 			case SND -> parseSnd();
-			// case OPEN_VECT -> parseVector();
 			case OPEN_VECT -> parseVectorLit();
 			default -> unexpectedTokenError();
 		};
@@ -285,7 +262,6 @@ public class MyLangParser implements Parser {
 	}
 
 	// parses expressions with unary operator NOT Atom ::= '!' Atom
-
 	private Not parseNot() throws ParserException {
 		consume(NOT); // or nextToken() since NOT has already been recognized
 		return new Not(parseAtom());
@@ -299,15 +275,7 @@ public class MyLangParser implements Parser {
 		return exp;
 	}
 
-	// Aggiunto parsing per '[' e ']'
-	/*
-	 * private Exp parseVector() throws ParserException {
-	 * consume(OPEN_VECT);
-	 * final var exp = parseSep();
-	 * consume(CLOSE_VECT);
-	 * return exp;
-	 * }
-	 */
+	// Aggiunte:
 
 	// VectorLiteral ::= '[' Exp ';' Exp ']'
 	private Exp parseVectorLit() throws ParserException {
@@ -319,7 +287,14 @@ public class MyLangParser implements Parser {
 		return new VectorLiteral(exp1, exp2);
 	}
 
-	// toDo
-	// parseGenericAdd
-	// parseGenericMul
+	// Stmt::= 'foreach' IDENT 'in' Exp Block
+	private ForeachStmt parseForeachStmt() throws ParserException {
+		consume(FOREACH);
+		var ident = parseVariable();
+		consume(IN);
+		var exp = parseExp();
+		var block = parseBlock();
+		return new ForeachStmt(ident, exp, block);
+	}
+
 }
